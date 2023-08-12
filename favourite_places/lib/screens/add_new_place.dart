@@ -1,7 +1,10 @@
+import 'dart:io';
+
 import 'package:favourite_places/constants/colors.dart';
 import 'package:favourite_places/constants/text_styles.dart';
 import 'package:favourite_places/models/favourite_pace.dart';
 import 'package:favourite_places/provider/favouritepaces_list_provider.dart';
+import 'package:favourite_places/widgets/image_input.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -17,6 +20,7 @@ class AddNewPlace extends ConsumerStatefulWidget {
 class _AddNewPlaceState extends ConsumerState<AddNewPlace> {
   var _enteredPlace = '';
   final _formKey = GlobalKey<FormState>();
+  File? curruntImage;
 
   void _savePlace() {
     if (_formKey.currentState!.validate()) {
@@ -25,11 +29,15 @@ class _AddNewPlaceState extends ConsumerState<AddNewPlace> {
       return;
     }
 
-    ref.watch(favouritePlacesListProvider.notifier).addFavoutitePlace(
-          FavouritePlace(name: _enteredPlace),
+    ref.read(favouritePlacesListProvider.notifier).addFavoutitePlace(
+          FavouritePlace(name: _enteredPlace, image: curruntImage!),
         );
 
     Navigator.of(context).pop();
+  }
+
+  void onselectImage(File file) {
+    curruntImage = file;
   }
 
   @override
@@ -77,6 +85,10 @@ class _AddNewPlaceState extends ConsumerState<AddNewPlace> {
                   ),
                 ),
               ),
+              const SizedBox(
+                height: 40,
+              ),
+              ImageInput(selecetImage: onselectImage),
               const SizedBox(
                 height: 40,
               ),
