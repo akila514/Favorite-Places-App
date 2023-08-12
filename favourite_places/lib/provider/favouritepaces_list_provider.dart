@@ -5,7 +5,7 @@ class FavouritePlacesNotifier extends StateNotifier<List<FavouritePlace>> {
   FavouritePlacesNotifier() : super([]);
 
   void addFavoutitePlace(FavouritePlace place) {
-    state = [...state, place];
+    state = [place, ...state];
   }
 
   void deleteFromFavoutitePlace(FavouritePlace place) {

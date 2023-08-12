@@ -68,15 +68,23 @@ class _PlacesState extends ConsumerState<Places> {
               ))
         ],
       ),
-      body: Column(
-        children: [
-          Expanded(
-              child: PlacesList(
-                  favouritePlacesList: favouritePlacesList,
-                  onDelete: _deleteFromFavouritePlaces,
-                  onNavigateToDescription: _navigeteToPlaceScreen))
-        ],
-      ),
+      body: favouritePlacesList.isEmpty
+          ? const Center(
+              child: Text(
+                'No places added yet.',
+                style: smallTextStyle,
+              ),
+            )
+          : Column(
+              children: [
+                Expanded(
+                  child: PlacesList(
+                      favouritePlacesList: favouritePlacesList,
+                      onDelete: _deleteFromFavouritePlaces,
+                      onNavigateToDescription: _navigeteToPlaceScreen),
+                ),
+              ],
+            ),
     );
   }
 }

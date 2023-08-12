@@ -41,7 +41,7 @@ class PlacesList extends StatelessWidget {
                 children: [
                   Text(
                     favouritePlacesList[index].name,
-                    style: normalTextStyle,
+                    style: smallTextStyle,
                   )
                 ],
               ),

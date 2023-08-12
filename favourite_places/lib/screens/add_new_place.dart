@@ -16,8 +16,15 @@ class AddNewPlace extends ConsumerStatefulWidget {
 
 class _AddNewPlaceState extends ConsumerState<AddNewPlace> {
   var _enteredPlace = '';
+  final _formKey = GlobalKey<FormState>();
 
   void _savePlace() {
+    if (_formKey.currentState!.validate()) {
+      _formKey.currentState!.save();
+    } else {
+      return;
+    }
+
     ref.watch(favouritePlacesListProvider.notifier).addFavoutitePlace(
           FavouritePlace(name: _enteredPlace),
         );
@@ -36,51 +43,68 @@ class _AddNewPlaceState extends ConsumerState<AddNewPlace> {
             style: normalTextStyle,
           ),
           backgroundColor: backgroundColor),
-      body: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 30),
-        child: Column(
-          children: [
-            Form(
-              child: TextFormField(
-                style: const TextStyle(color: primaryTextColor),
-                onChanged: (value) {
-                  setState(() {
-                    _enteredPlace = value;
-                  });
-                },
-                decoration: const InputDecoration(
-                  label: Text(
-                    'Add place',
-                    style: smallTextStyle,
+      body: SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 30),
+          child: Column(
+            children: [
+              Form(
+                key: _formKey,
+                child: TextFormField(
+                  enableSuggestions: true,
+                  maxLength: 40,
+                  validator: (value) {
+                    if (value == null ||
+                        value.isEmpty ||
+                        value.length <= 1 ||
+                        value.length > 40) {
+                      return 'Title must have more than 1 character';
+                    } else {
+                      return null;
+                    }
+                  },
+                  style: const TextStyle(color: primaryTextColor),
+                  onChanged: (value) {
+                    setState(() {
+                      _enteredPlace = value;
+                    });
+                  },
+                  decoration: const InputDecoration(
+                    label: Text(
+                      'Add place',
+                      style: textFieldTextStyle,
+                    ),
                   ),
                 ),
               ),
-            ),
-            const SizedBox(
-              height: 40,
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                TextButton(
-                  onPressed: () {
-                    _savePlace();
-                  },
-                  child: const Text(
-                    'Add',
-                    style: buttonTextStyle,
+              const SizedBox(
+                height: 40,
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  TextButton(
+                    onPressed: () {
+                      _savePlace();
+                    },
+                    child: const Text(
+                      'Add',
+                      style: buttonTextStyle,
+                    ),
                   ),
-                ),
-                TextButton(
-                  onPressed: () {},
-                  child: const Text(
-                    'Reset',
-                    style: buttonTextStyle,
-                  ),
-                )
-              ],
-            )
-          ],
+                  TextButton(
+                    onPressed: () {
+                      _formKey.currentState!.reset();
+                    },
+                    child: const Text(
+                      'Reset',
+                      style: buttonTextStyle,
+                    ),
+                  )
+                ],
+              )
+            ],
+          ),
         ),
       ),
     );
